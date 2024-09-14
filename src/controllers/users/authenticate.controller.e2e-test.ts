@@ -1,10 +1,11 @@
 import { AppModule } from '@/app.module'
 import { PrismaService } from '@/infra/prisma/prisma.service'
+import { hashPassword } from '@/lib/utils/hash'
 import { type NestExpressApplication } from '@nestjs/platform-express'
 import { Test } from '@nestjs/testing'
 import request from 'supertest'
 
-describe('Create account (e2e)', async () => {
+describe('Authenticate (e2e)', async () => {
   let app: NestExpressApplication
   let db: PrismaService
 
@@ -19,18 +20,21 @@ describe('Create account (e2e)', async () => {
     await app.init()
   })
 
-  it('should create a new account', async () => {
-    const res = await request(app.getHttpServer()).post('/accounts').send({
-      name: 'Test',
-      email: 'test@email.com',
+  it('[POST] /sessions', async () => {
+    const user = await db.user.create({
+      data: {
+        name: 'Test',
+        email: 'test@email.com',
+        passwordHash: await hashPassword('123456'),
+      },
+    })
+
+    const res = await request(app.getHttpServer()).post('/sessions').send({
+      email: user.email,
       password: '123456',
     })
 
     expect(res.status).toBe(201)
-
-    const user = await db.user.findUnique({
-      where: { email: 'test@email.com' },
-    })
-    expect(user?.id).toBeTruthy()
+    expect(res.body).toHaveProperty('access_token')
   })
 })
