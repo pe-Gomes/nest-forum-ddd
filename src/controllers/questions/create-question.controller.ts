@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Post,
-  Req,
-  UseGuards,
-  UsePipes,
-} from '@nestjs/common'
+import { Body, Controller, HttpCode, Post, UseGuards } from '@nestjs/common'
 import { JwtAuthGuard } from 'src/auth/auth.guard'
 import { CurrentUser } from 'src/auth/current-user.decorator'
 import { TokenPayload } from 'src/auth/jwt.strategy'
@@ -15,15 +8,12 @@ import { ZodValidationPipe } from 'src/pipes/zod-validation-pipe'
 import { z } from 'zod'
 
 const createQuestionSchema = z.object({
-  title: z
-    .string()
-    .min(1, { message: 'Title must be at least 1 character long' }),
-  content: z
-    .string()
-    .min(1, { message: 'Content must be at least 1 character long' }),
+  title: z.string().min(1),
+  content: z.string().min(1),
 })
 
 type CreateQuestionSchema = z.infer<typeof createQuestionSchema>
+const bodyValidationPipe = new ZodValidationPipe(createQuestionSchema)
 
 @Controller('/questions')
 export class CreateQuestionController {
@@ -31,10 +21,10 @@ export class CreateQuestionController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  @UsePipes(new ZodValidationPipe(createQuestionSchema))
+  @HttpCode(201)
   async handle(
     @CurrentUser() user: TokenPayload,
-    @Body() body: CreateQuestionSchema,
+    @Body(bodyValidationPipe) body: CreateQuestionSchema,
   ) {
     const { title, content } = body
 
