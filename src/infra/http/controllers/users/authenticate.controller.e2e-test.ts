@@ -1,4 +1,4 @@
-import { AppModule } from '../../app.module'
+import { AppModule } from '@/infra/app.module'
 import { PrismaService } from '@/infra/prisma/prisma.service'
 import { hashPassword } from '@/lib/utils/hash'
 import { type NestExpressApplication } from '@nestjs/platform-express'

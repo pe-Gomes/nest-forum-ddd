@@ -1,4 +1,4 @@
-import { AppModule } from '@/infra/http/app.module'
+import { AppModule } from '@/infra/app.module'
 import { PrismaService } from '@/infra/prisma/prisma.service'
 import { hashPassword } from '@/lib/utils/hash'
 import { JwtService } from '@nestjs/jwt/dist'
