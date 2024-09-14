@@ -3,7 +3,7 @@ import { JwtAuthGuard } from '@/infra/auth/auth.guard'
 import { CurrentUser } from '@/infra/auth/current-user.decorator'
 import { TokenPayload } from '@/infra/auth/jwt.strategy'
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe'
-import { PrismaService } from '@/infra/prisma/prisma.service'
+import { PrismaService } from '@/infra/db/prisma/prisma.service'
 import { createSlugFromText } from '@/lib/utils/slug'
 import { z } from 'zod'
 

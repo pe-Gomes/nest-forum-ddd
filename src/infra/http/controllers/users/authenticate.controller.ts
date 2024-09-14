@@ -6,8 +6,8 @@ import {
   UnauthorizedException,
   UsePipes,
 } from '@nestjs/common'
+import { PrismaService } from '@/infra/db/prisma/prisma.service'
 import { JwtService } from '@nestjs/jwt'
-import { PrismaService } from 'src/infra/prisma/prisma.service'
 import { comparePassword } from 'src/lib/utils/hash'
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe'
 import { z } from 'zod'

@@ -1,5 +1,5 @@
 import { Body, Controller, HttpCode, Post, UsePipes } from '@nestjs/common'
-import { PrismaService } from 'src/infra/prisma/prisma.service'
+import { PrismaService } from '@/infra/db/prisma/prisma.service'
 import { hashPassword } from 'src/lib/utils/hash'
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe'
 import { z } from 'zod'
