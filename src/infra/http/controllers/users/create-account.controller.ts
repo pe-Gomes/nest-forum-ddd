@@ -1,7 +1,13 @@
-import { Body, Controller, HttpCode, Post, UsePipes } from '@nestjs/common'
-import { PrismaService } from '@/infra/db/prisma/prisma.service'
-import { hashPassword } from 'src/lib/utils/hash'
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  HttpCode,
+  Post,
+  UsePipes,
+} from '@nestjs/common'
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe'
+import { RegisterStudentUseCase } from '@/domain/forum/app/use-cases/register-student'
 import { z } from 'zod'
 
 const createAccountBodySchema = z.object({
@@ -14,7 +20,7 @@ type CreateAccountBodySchema = z.infer<typeof createAccountBodySchema>
 
 @Controller('/accounts')
 export class CreateAccountController {
-  constructor(private db: PrismaService) {}
+  constructor(private registerStudent: RegisterStudentUseCase) {}
 
   @Post()
   @HttpCode(201)
@@ -22,14 +28,10 @@ export class CreateAccountController {
   async handle(@Body() body: CreateAccountBodySchema) {
     const { name, email, password } = body
 
-    const passwordHash = await hashPassword(password)
+    const res = await this.registerStudent.execute({ name, email, password })
 
-    await this.db.user.create({
-      data: {
-        name,
-        email,
-        passwordHash,
-      },
-    })
+    if (res.isFailure()) {
+      throw new BadRequestException(res.value.message)
+    }
   }
 }

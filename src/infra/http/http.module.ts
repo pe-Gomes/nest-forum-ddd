@@ -8,6 +8,7 @@ import { ListRecentQuestionsController } from './controllers/questions/list-rece
 import { ListRecentQuestionsUseCase } from '@/domain/forum/app/use-cases/list-recent-questions'
 import { AuthenticateStudentUseCase } from '@/domain/forum/app/use-cases/authenticate-student'
 import { CryptoModule } from '../crypto/crypto.module'
+import { RegisterStudentUseCase } from '@/domain/forum/app/use-cases/register-student'
 
 @Module({
   imports: [DatabaseModule, CryptoModule],
@@ -21,6 +22,7 @@ import { CryptoModule } from '../crypto/crypto.module'
     CreateQuestionUseCase,
     ListRecentQuestionsUseCase,
     AuthenticateStudentUseCase,
+    RegisterStudentUseCase,
   ],
 })
 export class HttpModule {}
