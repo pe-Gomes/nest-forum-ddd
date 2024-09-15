@@ -4,6 +4,8 @@ import { AuthenticateController } from './controllers/users/authenticate.control
 import { CreateAccountController } from './controllers/users/create-account.controller'
 import { DatabaseModule } from '../db/database.module'
 import { CreateQuestionUseCase } from '@/domain/forum/app/use-cases/create-question'
+import { ListRecentQuestionsController } from './controllers/questions/list-recent-questions'
+import { ListRecentQuestionsUseCase } from '@/domain/forum/app/use-cases/list-recent-questions'
 
 @Module({
   imports: [DatabaseModule],
@@ -11,7 +13,8 @@ import { CreateQuestionUseCase } from '@/domain/forum/app/use-cases/create-quest
     CreateAccountController,
     AuthenticateController,
     CreateQuestionController,
+    ListRecentQuestionsController,
   ],
-  providers: [CreateQuestionUseCase],
+  providers: [CreateQuestionUseCase, ListRecentQuestionsUseCase],
 })
 export class HttpModule {}
