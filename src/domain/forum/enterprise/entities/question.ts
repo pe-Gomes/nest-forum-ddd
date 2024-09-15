@@ -66,6 +66,10 @@ export class Question extends AggregateRoot<QuestionProps> {
     this.touch()
   }
 
+  get excerpt() {
+    return this.content.substring(0, 120).trimEnd().concat('...')
+  }
+
   get slug() {
     return this.props.slug
   }
