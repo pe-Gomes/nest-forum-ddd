@@ -1,9 +1,10 @@
 import { EntityID } from '@/core/entities/value-objects/entity-id'
 import { Question } from '../../enterprise/entities/question'
-import { type QuestionsRepository } from '../repositories/questions-repository'
+import { QuestionsRepository } from '../repositories/questions-repository'
 import { QuestionAttachment } from '../../enterprise/entities/question-attachment'
 import { type Either, success } from '@/core/either'
 import { QuestionAttachmentList } from '../../enterprise/entities/question-attachment-list'
+import { Injectable } from '@nestjs/common'
 
 type CreateQuestionRequest = {
   authorId: string
@@ -14,6 +15,7 @@ type CreateQuestionRequest = {
 
 type CreateQuestionResponse = Either<null, { question: Question }>
 
+@Injectable()
 export class CreateQuestionUseCase {
   constructor(private questionsRepository: QuestionsRepository) {}
 

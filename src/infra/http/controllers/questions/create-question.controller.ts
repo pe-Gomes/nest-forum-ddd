@@ -3,8 +3,7 @@ import { JwtAuthGuard } from '@/infra/auth/auth.guard'
 import { CurrentUser } from '@/infra/auth/current-user.decorator'
 import { TokenPayload } from '@/infra/auth/jwt.strategy'
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe'
-import { PrismaService } from '@/infra/db/prisma/prisma.service'
-import { createSlugFromText } from '@/lib/utils/slug'
+import { CreateQuestionUseCase } from '@/domain/forum/app/use-cases/create-question'
 import { z } from 'zod'
 
 const createQuestionSchema = z.object({
@@ -16,11 +15,11 @@ type CreateQuestionSchema = z.infer<typeof createQuestionSchema>
 const bodyValidationPipe = new ZodValidationPipe(createQuestionSchema)
 
 @Controller('/questions')
+@UseGuards(JwtAuthGuard)
 export class CreateQuestionController {
-  constructor(private readonly db: PrismaService) {}
+  constructor(private createQuestion: CreateQuestionUseCase) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
   @HttpCode(201)
   async handle(
     @CurrentUser() user: TokenPayload,
@@ -28,15 +27,10 @@ export class CreateQuestionController {
   ) {
     const { title, content } = body
 
-    const slug = createSlugFromText(title)
-
-    await this.db.question.create({
-      data: {
-        title,
-        content,
-        slug,
-        authorId: user.sub,
-      },
+    await this.createQuestion.execute({
+      title,
+      content,
+      authorId: user.sub,
     })
   }
 }
