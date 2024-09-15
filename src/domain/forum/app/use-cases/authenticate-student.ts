@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common'
 import { StudentsRepository } from '../repositories/students-repository'
 import { Encrypter } from '../crypt/encrypter'
 import { Either, failure, success } from '@/core/either'
 import { Token } from '../crypt/token'
 import { BadCredentialsError } from './errors'
+import { Injectable } from '@nestjs/common'
 
 export type AuthenticateStudentRequest = {
   email: string
@@ -19,7 +19,7 @@ export class AuthenticateStudentUseCase {
   constructor(
     private studentsRepository: StudentsRepository,
     private crypt: Encrypter,
-    private token: Token,
+    private token: Token<Record<string, unknown>>,
   ) {}
 
   async execute({
