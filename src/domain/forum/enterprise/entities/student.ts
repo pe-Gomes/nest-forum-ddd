@@ -4,6 +4,8 @@ import { Entity } from '@/core/entities/entity'
 
 type StudentProps = {
   name: string
+  email: string
+  passwordHash: string
 }
 
 export class Student extends Entity<StudentProps> {
@@ -13,5 +15,13 @@ export class Student extends Entity<StudentProps> {
 
   get name() {
     return this.props.name
+  }
+
+  get email() {
+    return this.props.email
+  }
+
+  get passwordHash() {
+    return this.props.passwordHash
   }
 }
