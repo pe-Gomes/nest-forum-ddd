@@ -2,14 +2,14 @@ import { type EntityID } from '@/core/entities/value-objects/entity-id'
 
 import { Entity } from '@/core/entities/entity'
 
-type StudentProps = {
+export type StudentProps = {
   name: string
   email: string
   passwordHash: string
 }
 
 export class Student extends Entity<StudentProps> {
-  create(args: StudentProps, id?: EntityID) {
+  static create(args: StudentProps, id?: EntityID) {
     return new Student(args, id)
   }
 

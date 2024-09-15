@@ -1,6 +1,6 @@
 import { type UseCaseError } from '@/core/errors/use-case-error'
 
-abstract class BaseUseCaseError extends Error implements UseCaseError {
+export abstract class BaseUseCaseError extends Error implements UseCaseError {
   constructor(message: string) {
     super(message)
   }
