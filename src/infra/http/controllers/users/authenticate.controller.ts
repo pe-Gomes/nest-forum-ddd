@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   HttpCode,
@@ -9,6 +10,7 @@ import {
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe'
 import { z } from 'zod'
 import { AuthenticateStudentUseCase } from '@/domain/forum/app/use-cases/authenticate-student'
+import { BadCredentialsError } from '@/domain/forum/app/use-cases/errors'
 
 const authenticateBodySchema = z.object({
   email: z.string().email(),
@@ -30,7 +32,14 @@ export class AuthenticateController {
     const res = await this.authenticate.execute({ password, email })
 
     if (res.isFailure()) {
-      throw new UnauthorizedException(res.value)
+      const err = res.value
+
+      switch (err.constructor) {
+        case BadCredentialsError:
+          throw new UnauthorizedException(err.message)
+        default:
+          throw new BadRequestException(err.message)
+      }
     }
 
     return { access_token: res.value.accessToken }

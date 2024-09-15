@@ -1,4 +1,11 @@
-import { Body, Controller, HttpCode, Post, UseGuards } from '@nestjs/common'
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  HttpCode,
+  Post,
+  UseGuards,
+} from '@nestjs/common'
 import { JwtAuthGuard } from '@/infra/auth/auth.guard'
 import { CurrentUser } from '@/infra/auth/current-user.decorator'
 import { TokenPayload } from '@/infra/auth/jwt.strategy'
@@ -27,10 +34,14 @@ export class CreateQuestionController {
   ) {
     const { title, content } = body
 
-    await this.createQuestion.execute({
+    const res = await this.createQuestion.execute({
       title,
       content,
       authorId: user.sub,
     })
+
+    if (res.isFailure()) {
+      throw new BadRequestException()
+    }
   }
 }
