@@ -88,7 +88,7 @@ export class Question extends AggregateRoot<QuestionProps> {
   }
 
   get updatedAt() {
-    return this.props.createdAt
+    return this.props.updatedAt
   }
 
   get isNew() {
