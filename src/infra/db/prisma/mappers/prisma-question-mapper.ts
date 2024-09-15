@@ -37,11 +37,9 @@ export class PrismaQuestionMapper {
       slug: question.slug.value,
       content: question.content,
       authorId: question.authorId.toString(),
-      bestAnswerId: question.bestAnswerId
-        ? question.bestAnswerId.toString()
-        : null,
+      bestAnswerId: question.bestAnswerId?.toString() ?? null,
       createdAt: question.createdAt,
-      updatedAt: question.updatedAt,
+      updatedAt: question.updatedAt ?? null,
     }
   }
 }
