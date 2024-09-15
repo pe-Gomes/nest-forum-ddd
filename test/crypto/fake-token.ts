@@ -4,12 +4,12 @@ type FakeTokenPayload = {
   sub: string
 }
 
-export class FakeToken implements Token {
+export class FakeToken implements Token<FakeTokenPayload> {
   async encode(payload: FakeTokenPayload): Promise<string> {
     return JSON.stringify(payload)
   }
 
-  async decode<FakeTokenPayload>(token: string) {
+  async decode(token: string) {
     return JSON.parse(token) as FakeTokenPayload
   }
 }

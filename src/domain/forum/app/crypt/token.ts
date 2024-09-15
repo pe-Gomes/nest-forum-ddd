@@ -1,4 +1,4 @@
-export abstract class Token {
+export abstract class Token<T> {
   abstract encode(payload: Record<string, unknown>): string | Promise<string>
-  abstract decode<T>(token: string): T | Promise<T>
+  abstract decode(token: string): T | Promise<T>
 }
