@@ -6,15 +6,21 @@ import { DatabaseModule } from '../db/database.module'
 import { CreateQuestionUseCase } from '@/domain/forum/app/use-cases/create-question'
 import { ListRecentQuestionsController } from './controllers/questions/list-recent-questions'
 import { ListRecentQuestionsUseCase } from '@/domain/forum/app/use-cases/list-recent-questions'
+import { AuthenticateStudentUseCase } from '@/domain/forum/app/use-cases/authenticate-student'
+import { CryptoModule } from '../crypto/crypto.module'
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, CryptoModule],
   controllers: [
     CreateAccountController,
     AuthenticateController,
     CreateQuestionController,
     ListRecentQuestionsController,
   ],
-  providers: [CreateQuestionUseCase, ListRecentQuestionsUseCase],
+  providers: [
+    CreateQuestionUseCase,
+    ListRecentQuestionsUseCase,
+    AuthenticateStudentUseCase,
+  ],
 })
 export class HttpModule {}

@@ -2,18 +2,38 @@ import { type StudentsRepository } from '@/domain/forum/app/repositories/student
 import { type Student } from '@/domain/forum/enterprise/entities/student'
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
+import { PrismaStudentMapper } from '../mappers/prisma-student-mapper'
 
 @Injectable()
 export class PrismaStudentsRepository implements StudentsRepository {
   constructor(private db: PrismaService) {}
 
-  getByEmail(email: string): Promise<Student | null> {
-    throw new Error('Method not implemented.')
+  async getByEmail(email: string) {
+    const student = await this.db.user.findFirst({
+      where: {
+        email,
+      },
+    })
+
+    if (!student) return null
+
+    return PrismaStudentMapper.toEntity(student)
   }
-  getById(id: string): Promise<Student | null> {
-    throw new Error('Method not implemented.')
+
+  async getById(id: string) {
+    const student = await this.db.user.findFirst({
+      where: {
+        id,
+      },
+    })
+
+    if (!student) return null
+
+    return PrismaStudentMapper.toEntity(student)
   }
-  create(student: Student): Promise<Student> {
-    throw new Error('Method not implemented.')
+  async create(student: Student) {
+    const data = PrismaStudentMapper.create(student)
+
+    await this.db.user.create({ data })
   }
 }
