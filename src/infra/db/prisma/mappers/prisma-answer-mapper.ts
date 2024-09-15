@@ -3,7 +3,7 @@ import { Answer } from '@/domain/forum/enterprise/entities/answer'
 import { EntityID } from '@/core/entities/value-objects/entity-id'
 
 export class PrismaAnswerMapper {
-  toEntity(answer: PrismaAnswer): Answer {
+  static toEntity(answer: PrismaAnswer): Answer {
     return Answer.create(
       {
         content: answer.content,
@@ -16,7 +16,7 @@ export class PrismaAnswerMapper {
     )
   }
 
-  toPersistence(answer: Answer): PrismaAnswer {
+  static toPersistence(answer: Answer): PrismaAnswer {
     return {
       id: answer.id.toString(),
       content: answer.content,
