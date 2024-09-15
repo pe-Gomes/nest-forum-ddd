@@ -1,15 +1,11 @@
 import { type PaginationParams } from '@/core/repositories/pagination-params'
 import { type Question } from '../../enterprise/entities/question'
 
-export interface QuestionsRepository {
-  create(question: Question): Promise<void>
-
-  getBySlug(slug: string): Promise<Question | null>
-  getById(id: string): Promise<Question | null>
-
-  getMany({ page, limit }: PaginationParams): Promise<Question[]>
-
-  update(question: Question): Promise<void>
-
-  delete(id: string): Promise<void>
+export abstract class QuestionsRepository {
+  abstract create(question: Question): Promise<void>
+  abstract getBySlug(slug: string): Promise<Question | null>
+  abstract getById(id: string): Promise<Question | null>
+  abstract getMany({ page, limit }: PaginationParams): Promise<Question[]>
+  abstract update(question: Question): Promise<void>
+  abstract delete(id: string): Promise<void>
 }
