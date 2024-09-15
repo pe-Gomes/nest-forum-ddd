@@ -1,13 +1,22 @@
 import { type AnswerAttachmentsRepository } from '@/domain/forum/app/repositories/answer-attachments-repository'
 import { type AnswerAttachment } from '@/domain/forum/enterprise/entities/answer-attachment'
+import { type PrismaService } from '../prisma.service'
+import { PrismaAnswerAttachmentMapper } from '../mappers/prisma-answer-attachment-mapper'
 
 export class PrismaAnswerAttachmentsRepository
   implements AnswerAttachmentsRepository
 {
-  getManyByAnswerId(answerId: string): Promise<AnswerAttachment[]> {
-    throw new Error('Method not implemented.')
+  constructor(private readonly db: PrismaService) {}
+
+  async getManyByAnswerId(answerId: string): Promise<AnswerAttachment[]> {
+    const attachs = await this.db.attachment.findMany({
+      where: { answerId },
+    })
+
+    return attachs.map((att) => PrismaAnswerAttachmentMapper.toEntity(att))
   }
-  deleteManyByAnswerId(answerId: string): Promise<void> {
-    throw new Error('Method not implemented.')
+
+  async deleteManyByAnswerId(answerId: string): Promise<void> {
+    await this.db.attachment.deleteMany({ where: { answerId } })
   }
 }

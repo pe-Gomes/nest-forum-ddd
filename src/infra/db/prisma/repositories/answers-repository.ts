@@ -1,25 +1,48 @@
 import { type PaginationParams } from '@/core/repositories/pagination-params'
 import { type AnswersRepository } from '@/domain/forum/app/repositories/answers-repository'
 import { type Answer } from '@/domain/forum/enterprise/entities/answer'
+import { type PrismaService } from '../prisma.service'
+import { PrismaAnswerMapper } from '../mappers/prisma-answer-mapper'
 
 export class PrismaAnswersRepository implements AnswersRepository {
-  create(answer: Answer): Promise<void> {
-    throw new Error('Method not implemented.')
+  constructor(private db: PrismaService) {}
+
+  async create(answer: Answer) {
+    const data = PrismaAnswerMapper.toPersistence(answer)
+
+    await this.db.answer.create({ data })
   }
-  getById(id: string): Promise<Answer | null> {
-    throw new Error('Method not implemented.')
+
+  async getById(id: string) {
+    const answer = await this.db.answer.findUnique({
+      where: { id },
+    })
+
+    if (!answer) return null
+
+    return PrismaAnswerMapper.toEntity(answer)
   }
-  findManyByQuestionId({
+  async findManyByQuestionId({
     questionId,
     page,
     limit,
-  }: { questionId: string } & PaginationParams): Promise<Answer[]> {
-    throw new Error('Method not implemented.')
+  }: { questionId: string } & PaginationParams) {
+    const answers = await this.db.answer.findMany({
+      where: { questionId },
+      orderBy: { createdAt: 'desc' },
+      take: limit,
+      skip: (page - 1) * limit,
+    })
+
+    return answers.map((answer) => PrismaAnswerMapper.toEntity(answer))
   }
-  update(answer: Answer): Promise<void> {
-    throw new Error('Method not implemented.')
+
+  async update(answer: Answer) {
+    const data = PrismaAnswerMapper.toPersistence(answer)
+
+    await this.db.answer.update({ where: { id: answer.id.toString() }, data })
   }
-  delete(id: string): Promise<void> {
-    throw new Error('Method not implemented.')
+  async delete(id: string) {
+    await this.db.answer.delete({ where: { id } })
   }
 }
