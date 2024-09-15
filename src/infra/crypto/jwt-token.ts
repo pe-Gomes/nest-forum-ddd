@@ -1,9 +1,11 @@
-import { type Token } from '@/domain/forum/app/crypt/token'
-import { type JwtService } from '@nestjs/jwt'
 import { type TokenPayload } from '../auth/jwt.strategy'
+import { JwtService } from '@nestjs/jwt'
+import { Token } from '@/domain/forum/app/crypt/token'
+import { Injectable } from '@nestjs/common'
 
+@Injectable()
 export class JwtToken implements Token<TokenPayload> {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(private jwtService: JwtService) {}
 
   async encode(payload: Record<string, unknown>) {
     return await this.jwtService.signAsync(payload)

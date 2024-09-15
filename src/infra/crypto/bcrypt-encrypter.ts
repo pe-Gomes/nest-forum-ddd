@@ -1,6 +1,8 @@
-import { type Encrypter } from '@/domain/forum/app/crypt/encrypter'
+import { Encrypter } from '@/domain/forum/app/crypt/encrypter'
+import { Injectable } from '@nestjs/common'
 import { compare, hash } from 'bcryptjs'
 
+@Injectable()
 export class BcryptEncrypter implements Encrypter {
   private SALT_ROUNDS = 8
 
