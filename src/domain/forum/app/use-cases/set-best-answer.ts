@@ -1,8 +1,9 @@
-import { type Either, failure, success } from '@/core/either'
-import { type Question } from '../../enterprise/entities/question'
-import { type AnswersRepository } from '../repositories/answers-repository'
-import { type QuestionsRepository } from '../repositories/questions-repository'
+import { Either, failure, success } from '@/core/either'
+import { Question } from '../../enterprise/entities/question'
+import { AnswersRepository } from '../repositories/answers-repository'
+import { QuestionsRepository } from '../repositories/questions-repository'
 import { NotAllowedError, ResourceNotFoundError } from '@/core/errors'
+import { Injectable } from '@nestjs/common'
 
 type SetBestAnswerRequest = {
   authorId: string
@@ -16,6 +17,7 @@ type SetBestAnswerResponse = Either<
   }
 >
 
+@Injectable()
 export class SetBestAnswerUseCase {
   constructor(
     private questionRepository: QuestionsRepository,
