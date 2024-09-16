@@ -1,7 +1,10 @@
 import { AnswerComment } from '../../enterprise/entities/answer-comment'
-import { type AnswersRepository } from '../repositories/answers-repository'
-import { type AnswerCommentsRepository } from '../repositories/answer-comments-repository'
+import { AnswersRepository } from '../repositories/answers-repository'
+import { AnswerCommentsRepository } from '../repositories/answer-comments-repository'
 import { EntityID } from '@/core/entities/value-objects/entity-id'
+import { Either, failure, success } from '@/core/either'
+import { ResourceNotFoundError } from '@/core/errors'
+import { Injectable } from '@nestjs/common'
 
 type CommentOnAnswerRequest = {
   authorId: string
@@ -9,10 +12,14 @@ type CommentOnAnswerRequest = {
   content: string
 }
 
-type CommentOnAnswerResponse = {
-  comment: AnswerComment
-}
+type CommentOnAnswerResponse = Either<
+  ResourceNotFoundError,
+  {
+    comment: AnswerComment
+  }
+>
 
+@Injectable()
 export class CommentOnAnswerUseCase {
   constructor(
     private answerRepository: AnswersRepository,
@@ -27,7 +34,7 @@ export class CommentOnAnswerUseCase {
     const answer = await this.answerRepository.getById(answerId)
 
     if (!answer) {
-      throw new Error('Answer not found')
+      return failure(new ResourceNotFoundError())
     }
 
     const comment = AnswerComment.create({
@@ -38,6 +45,6 @@ export class CommentOnAnswerUseCase {
 
     await this.answerCommentRepository.create(comment)
 
-    return { comment }
+    return success({ comment })
   }
 }
