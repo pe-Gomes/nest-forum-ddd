@@ -1,8 +1,16 @@
-import { type Answer as PrismaAnswer } from '@prisma/client'
+import { type Prisma, type Answer as PrismaAnswer } from '@prisma/client'
 import { Answer } from '@/domain/forum/enterprise/entities/answer'
 import { EntityID } from '@/core/entities/value-objects/entity-id'
 
 export class PrismaAnswerMapper {
+  static create(asnwer: Answer): Prisma.AnswerUncheckedCreateInput {
+    return {
+      content: asnwer.content,
+      questionId: asnwer.questionId.toString(),
+      authorId: asnwer.authorId.toString(),
+    }
+  }
+
   static toEntity(answer: PrismaAnswer): Answer {
     return Answer.create(
       {

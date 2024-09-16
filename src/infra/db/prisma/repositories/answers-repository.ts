@@ -1,14 +1,16 @@
-import { type PaginationParams } from '@/core/repositories/pagination-params'
-import { type AnswersRepository } from '@/domain/forum/app/repositories/answers-repository'
-import { type Answer } from '@/domain/forum/enterprise/entities/answer'
-import { type PrismaService } from '../prisma.service'
+import { PaginationParams } from '@/core/repositories/pagination-params'
+import { AnswersRepository } from '@/domain/forum/app/repositories/answers-repository'
+import { Answer } from '@/domain/forum/enterprise/entities/answer'
+import { PrismaService } from '../prisma.service'
 import { PrismaAnswerMapper } from '../mappers/prisma-answer-mapper'
+import { Injectable } from '@nestjs/common'
 
+@Injectable()
 export class PrismaAnswersRepository implements AnswersRepository {
   constructor(private db: PrismaService) {}
 
   async create(answer: Answer) {
-    const data = PrismaAnswerMapper.toPersistence(answer)
+    const data = PrismaAnswerMapper.create(answer)
 
     await this.db.answer.create({ data })
   }
