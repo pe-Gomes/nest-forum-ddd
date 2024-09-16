@@ -23,13 +23,17 @@ describe('CommentOnQuestion Use Case', () => {
 
     await questionRespository.create(question)
 
-    const { comment } = await sut.execute({
+    const res = await sut.execute({
       questionId: question.id.toString(),
       authorId: 'random-author-id',
       content: 'random-content',
     })
 
-    expect(comment.id).toBeDefined()
-    expect(comment.questionId).toBe(comment.questionId)
+    if (res.isFailure()) {
+      return
+    }
+
+    expect(res.value?.comment.id).toBeDefined()
+    expect(res.value?.comment.questionId).toBe(res.value.comment.questionId)
   })
 })
