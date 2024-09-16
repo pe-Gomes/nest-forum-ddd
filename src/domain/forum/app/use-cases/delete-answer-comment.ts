@@ -1,29 +1,26 @@
-import { type Either, failure, success } from '@/core/either'
-import { type AnswerCommentsRepository } from '../repositories/answer-comments-repository'
-import { type QuestionCommentsRepository } from '../repositories/question-comments-repository'
+import { Either, failure, success } from '@/core/either'
+import { AnswerCommentsRepository } from '../repositories/answer-comments-repository'
 import { NotAllowedError, ResourceNotFoundError } from '@/core/errors'
+import { Injectable } from '@nestjs/common'
 
-type DeleteCommentRequest = {
+type DeleteAnswerCommentRequest = {
   commentId: string
   authorId: string
 }
 
-type DeleteCommentResponse = Either<
+type DeleteAnswerCommentResponse = Either<
   ResourceNotFoundError | NotAllowedError,
   object
 >
 
-export class DeleteCommentUseCase {
-  constructor(
-    private commentRepository:
-      | QuestionCommentsRepository
-      | AnswerCommentsRepository,
-  ) {}
+@Injectable()
+export class DeleteAnswerCommentUseCase {
+  constructor(private commentRepository: AnswerCommentsRepository) {}
 
   async execute({
     commentId,
     authorId,
-  }: DeleteCommentRequest): Promise<DeleteCommentResponse> {
+  }: DeleteAnswerCommentRequest): Promise<DeleteAnswerCommentResponse> {
     const comment = await this.commentRepository.getById(commentId)
 
     if (!comment) {
