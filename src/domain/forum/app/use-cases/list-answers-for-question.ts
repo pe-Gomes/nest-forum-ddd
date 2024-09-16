@@ -1,7 +1,8 @@
-import { type AnswersRepository } from '../repositories/answers-repository'
-import { type Answer } from '../../enterprise/entities/answer'
-import { type PaginationParams } from '@/core/repositories/pagination-params'
+import { AnswersRepository } from '../repositories/answers-repository'
+import { Answer } from '../../enterprise/entities/answer'
+import { PaginationParams } from '@/core/repositories/pagination-params'
 import { success, type Either } from '@/core/either'
+import { Injectable } from '@nestjs/common'
 
 type ListRecentAnswersRequest = {
   questionId: string
@@ -14,6 +15,7 @@ type ListRecentAnswersResponse = Either<
   }
 >
 
+@Injectable()
 export class ListAnswersForQuestionUseCase {
   constructor(private answerRepository: AnswersRepository) {}
   async execute({
