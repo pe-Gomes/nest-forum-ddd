@@ -43,7 +43,7 @@ describe('Delete Question By Slug E2E', () => {
       .delete(`/questions/${question.id.toString()}`)
       .set('Authorization', `Bearer ${accessToken}`)
 
-    expect(res.status).toBe(200)
+    expect(res.status).toBe(204)
 
     const deletedQuestion = await db.question.findUnique({
       where: { id: question.id.toString() },

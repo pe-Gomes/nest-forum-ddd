@@ -7,6 +7,7 @@ import {
   Controller,
   Delete,
   ForbiddenException,
+  HttpCode,
   Param,
 } from '@nestjs/common'
 
@@ -15,6 +16,7 @@ export class DeleteQuestionController {
   constructor(private deleteQuestion: DeleteQuestionUseCase) {}
 
   @Delete()
+  @HttpCode(204)
   async handle(
     @CurrentUser() user: TokenPayload,
     @Param('id') questionId: string,
