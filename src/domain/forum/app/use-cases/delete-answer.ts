@@ -1,7 +1,8 @@
-import { type Either, failure, success } from '@/core/either'
-import { type AnswersRepository } from '../repositories/answers-repository'
+import { Either, failure, success } from '@/core/either'
+import { AnswersRepository } from '../repositories/answers-repository'
 import { NotAllowedError, ResourceNotFoundError } from '@/core/errors'
-import { type AnswerAttachmentsRepository } from '../repositories/answer-attachments-repository'
+import { AnswerAttachmentsRepository } from '../repositories/answer-attachments-repository'
+import { Injectable } from '@nestjs/common'
 
 type DeleteAnswerRequest = {
   id: string
@@ -13,6 +14,7 @@ type DeleteAnswerResponse = Either<
   object
 >
 
+@Injectable()
 export class DeleteAnswerUseCase {
   constructor(
     private answerRepository: AnswersRepository,
