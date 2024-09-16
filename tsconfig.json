@@ -21,7 +21,7 @@
       "@/*": ["src/*"],
       "@tests/*": ["test/*"]
     },
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals", "multer"]
   },
   "include": ["src/**/*", "./test/**/*.ts", ".eslintrc.cjs", "*.mjs", "*.ts"]
 }
