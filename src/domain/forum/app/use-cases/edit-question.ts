@@ -1,11 +1,12 @@
 import { type Either, failure, success } from '@/core/either'
 import { ResourceNotFoundError, NotAllowedError } from '@/core/errors'
 import { type Question } from '../../enterprise/entities/question'
-import { type QuestionsRepository } from '../repositories/questions-repository'
+import { QuestionsRepository } from '../repositories/questions-repository'
 import { QuestionAttachmentList } from '../../enterprise/entities/question-attachment-list'
-import { type QuestionAttachmentsRepository } from '../repositories/question-attachments-repository'
+import { QuestionAttachmentsRepository } from '../repositories/question-attachments-repository'
 import { QuestionAttachment } from '../../enterprise/entities/question-attachment'
 import { EntityID } from '@/core/entities/value-objects/entity-id'
+import { Injectable } from '@nestjs/common'
 
 type EditQuestionRequest = {
   authorId: string
@@ -22,6 +23,7 @@ type EditQuestionResponse = Either<
   }
 >
 
+@Injectable()
 export class EditQuestionUseCase {
   constructor(
     private questionRepository: QuestionsRepository,
