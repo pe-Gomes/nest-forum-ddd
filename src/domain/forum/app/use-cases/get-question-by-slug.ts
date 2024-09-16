@@ -1,7 +1,8 @@
 import { type Either, failure, success } from '@/core/either'
 import { type Question } from '../../enterprise/entities/question'
-import { type QuestionsRepository } from '../repositories/questions-repository'
+import { QuestionsRepository } from '../repositories/questions-repository'
 import { ResourceNotFoundError } from '@/core/errors'
+import { Injectable } from '@nestjs/common'
 
 type GetQuestionBySlugRequest = {
   slug: string
@@ -14,6 +15,7 @@ type GetQuestionBySlugResponse = Either<
   }
 >
 
+@Injectable()
 export class GetQuestionBySlugUseCase {
   constructor(private questionRepository: QuestionsRepository) {}
   async execute({
