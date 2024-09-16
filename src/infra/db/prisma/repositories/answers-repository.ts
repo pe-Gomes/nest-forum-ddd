@@ -10,7 +10,7 @@ export class PrismaAnswersRepository implements AnswersRepository {
   constructor(private db: PrismaService) {}
 
   async create(answer: Answer) {
-    const data = PrismaAnswerMapper.create(answer)
+    const data = PrismaAnswerMapper.toPersistence(answer)
 
     await this.db.answer.create({ data })
   }

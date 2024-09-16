@@ -32,7 +32,7 @@ export class PrismaStudentsRepository implements StudentsRepository {
     return PrismaStudentMapper.toEntity(student)
   }
   async create(student: Student) {
-    const data = PrismaStudentMapper.create(student)
+    const data = PrismaStudentMapper.toPersistence(student)
 
     await this.db.user.create({ data })
   }

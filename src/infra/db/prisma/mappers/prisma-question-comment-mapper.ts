@@ -1,21 +1,8 @@
 import { EntityID } from '@/core/entities/value-objects/entity-id'
 import { QuestionComment } from '@/domain/forum/enterprise/entities/question-comment'
-import { type Comment, type Prisma } from '@prisma/client'
+import { type Comment } from '@prisma/client'
 
 export class PrismaQuestionCommentMapper {
-  static create(
-    answerComment: QuestionComment,
-  ): Prisma.CommentUncheckedCreateInput {
-    return {
-      content: answerComment.content,
-      authorId: answerComment.authorId.toString(),
-      questionId: answerComment.questionId.toString(),
-      answerId: null,
-      createdAt: answerComment.createdAt,
-      updatedAt: answerComment.updatedAt ?? null,
-    }
-  }
-
   static toEntity(answerComment: Comment): QuestionComment {
     if (!answerComment.questionId) {
       throw new Error('Invalid comment type.')
