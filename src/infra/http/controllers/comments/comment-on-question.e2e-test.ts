@@ -9,7 +9,7 @@ import { QuestionFactory } from '@tests/factory/question'
 import { StudentFactory } from '@tests/factory/student'
 import request from 'supertest'
 
-describe('List Answers to Question (e2e)', async () => {
+describe('Create Comment to Answers to Question (e2e)', async () => {
   let app: NestExpressApplication
   let studentFactory: StudentFactory
   let questionsFactory: QuestionFactory
@@ -31,7 +31,7 @@ describe('List Answers to Question (e2e)', async () => {
     await app.init()
   })
 
-  it('[GET] /questions/:id/comments', async () => {
+  it('[POST] /questions/:id/comments', async () => {
     const user = await studentFactory.makePrismaStudent()
 
     const question = await questionsFactory.makePrismaQuestion({
