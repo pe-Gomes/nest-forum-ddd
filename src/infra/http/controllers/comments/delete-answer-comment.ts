@@ -1,5 +1,5 @@
 import { NotAllowedError, ResourceNotFoundError } from '@/core/errors'
-import { DeleteQuestionCommentUseCase } from '@/domain/forum/app/use-cases/delete-question-comment'
+import { DeleteAnswerCommentUseCase } from '@/domain/forum/app/use-cases/delete-answer-comment'
 import { CurrentUser } from '@/infra/auth/current-user.decorator'
 import { TokenPayload } from '@/infra/auth/jwt.strategy'
 import {
@@ -11,9 +11,9 @@ import {
   Param,
 } from '@nestjs/common'
 
-@Controller('/comments/:id/question')
-export class DeleteQuestionCommentController {
-  constructor(private deleteComment: DeleteQuestionCommentUseCase) {}
+@Controller('/comments/:id/answer')
+export class DeleteAnswerCommentController {
+  constructor(private deleteComment: DeleteAnswerCommentUseCase) {}
 
   @Delete()
   @HttpCode(204)
