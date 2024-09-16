@@ -1,6 +1,7 @@
-import { type Either, success } from '@/core/either'
-import { type QuestionComment } from '../../enterprise/entities/question-comment'
-import { type QuestionCommentsRepository } from '../repositories/question-comments-repository'
+import { Either, success } from '@/core/either'
+import { QuestionComment } from '../../enterprise/entities/question-comment'
+import { QuestionCommentsRepository } from '../repositories/question-comments-repository'
+import { Injectable } from '@nestjs/common'
 
 type ListQuestionCommentsRequest = {
   questionId: string
@@ -15,6 +16,7 @@ type ListQuestionCommentsResponse = Either<
   }
 >
 
+@Injectable()
 export class ListQuestionCommentsUseCase {
   constructor(private questionRepository: QuestionCommentsRepository) {}
   async execute({
