@@ -15,7 +15,7 @@ describe('Answer Question Use Case', () => {
   it('should create a answer', async () => {
     const res = await useCase.execute({
       content: 'answer content',
-      instructorId: 'instructorId',
+      authorId: 'instructorId',
       questionId: 'questionId',
       attachmentsIds: ['1', '2'],
     })
