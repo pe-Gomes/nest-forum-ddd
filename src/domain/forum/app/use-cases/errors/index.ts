@@ -11,3 +11,9 @@ export class BadCredentialsError extends BaseUseCaseError {
     super('Bad credentials.')
   }
 }
+
+export class InvalidAttachmentTypeError extends BaseUseCaseError {
+  constructor(type: string) {
+    super(`File type ${type} is not valid.`)
+  }
+}
