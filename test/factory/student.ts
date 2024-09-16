@@ -5,6 +5,9 @@ import {
 } from '@/domain/forum/enterprise/entities/student'
 import { FakeEncrypter } from '@tests/crypto/fake-encrypter'
 import { faker } from '@faker-js/faker'
+import { Injectable } from '@nestjs/common'
+import { PrismaStudentMapper } from '@/infra/db/prisma/mappers/prisma-student-mapper'
+import { PrismaService } from '@/infra/db/prisma/prisma.service'
 
 export async function createStudent(
   overrides: Partial<StudentProps> = {},
@@ -21,4 +24,19 @@ export async function createStudent(
     },
     id,
   )
+}
+
+@Injectable()
+export class StudentFactory {
+  constructor(private prisma: PrismaService) {}
+
+  async makePrismaStudent(data: Partial<StudentProps> = {}): Promise<Student> {
+    const student = await createStudent(data)
+
+    await this.prisma.user.create({
+      data: PrismaStudentMapper.toPersistence(student),
+    })
+
+    return student
+  }
 }
