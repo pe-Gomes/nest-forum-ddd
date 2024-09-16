@@ -38,9 +38,10 @@ import { ListQuestionCommentsUseCase } from '@/domain/forum/app/use-cases/list-q
 import { ListAnswerCommentsController } from './controllers/comments/list-answer-comments'
 import { ListAnswerCommentsUseCase } from '@/domain/forum/app/use-cases/list-answer-comments'
 import { UploadAttachmentController } from './controllers/attachments/upload-attachment'
+import { StorageModule } from '../storage/storage.module'
 
 @Module({
-  imports: [DatabaseModule, CryptoModule],
+  imports: [DatabaseModule, CryptoModule, StorageModule],
   controllers: [
     CreateAccountController,
     AuthenticateController,
