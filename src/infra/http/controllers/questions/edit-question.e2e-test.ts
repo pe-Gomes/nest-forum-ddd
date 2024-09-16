@@ -47,7 +47,7 @@ describe('Edit Question By Slug E2E', () => {
       .set('Authorization', `Bearer ${accessToken}`)
       .send({ title: 'Question Edited', content: 'Content edited' })
 
-    expect(res.status).toBe(200)
+    expect(res.status).toBe(204)
 
     const updatedQuestion = await db.question.findUnique({
       where: { id: question.id.toString() },

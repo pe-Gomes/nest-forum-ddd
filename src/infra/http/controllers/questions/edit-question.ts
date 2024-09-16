@@ -4,6 +4,7 @@ import {
   Body,
   Controller,
   ForbiddenException,
+  HttpCode,
   Param,
   Put,
 } from '@nestjs/common'
@@ -28,6 +29,7 @@ export class EditQuestionController {
   constructor(private editQuestion: EditQuestionUseCase) {}
 
   @Put()
+  @HttpCode(204)
   async handle(
     @CurrentUser() user: TokenPayload,
     @Param('id') questionId: string,
