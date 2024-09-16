@@ -67,8 +67,6 @@ describe('List Comments to Answer (e2e)', async () => {
       .get(`/answers/${answer.id.toString()}/comments`)
       .set('Authorization', `Bearer ${token}`)
 
-    console.log(res.body)
-
     expect(res.status).toBe(200)
     expect(res.body).toEqual({
       comments: [

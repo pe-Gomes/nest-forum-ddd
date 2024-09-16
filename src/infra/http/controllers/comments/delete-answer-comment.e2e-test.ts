@@ -70,8 +70,6 @@ describe('Delete Comment to Answer (e2e)', async () => {
       where: { id: comment.id.toString() },
     })
 
-    console.log(deleted)
-
     expect(deleted).toBeNull()
   })
 })
