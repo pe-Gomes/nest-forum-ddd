@@ -1,4 +1,7 @@
+import { InvalidAttachmentTypeError } from '@/domain/forum/app/use-cases/errors'
+import { UploadAttachmentUseCase } from '@/domain/forum/app/use-cases/upload-attachment'
 import {
+  BadRequestException,
   Controller,
   FileTypeValidator,
   MaxFileSizeValidator,
@@ -22,11 +25,30 @@ const fileValidationPipe = new ParseFilePipe({
 
 @Controller('/attachments')
 export class UploadAttachmentController {
-  // constructor() {}
+  constructor(private uploadAttachment: UploadAttachmentUseCase) {}
 
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async handle(@UploadedFile(fileValidationPipe) file: Express.Multer.File) {
-    console.log(file)
+    const res = await this.uploadAttachment.execute({
+      fileName: file.originalname,
+      fileType: file.mimetype,
+      file: file.buffer,
+    })
+
+    if (res.isFailure()) {
+      const err = res.value
+
+      switch (err.constructor) {
+        case InvalidAttachmentTypeError:
+          throw new BadRequestException(err.message)
+        default:
+          throw new BadRequestException(err.message)
+      }
+    }
+
+    const { attachment } = res.value
+
+    return { attachmentId: attachment.id.toString() }
   }
 }
