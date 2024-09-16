@@ -6,9 +6,9 @@ interface AttachmentProps {
   link: string
 }
 
-export class Attachement extends Entity<AttachmentProps> {
+export class Attachment extends Entity<AttachmentProps> {
   static create(props: AttachmentProps, id?: EntityID) {
-    return new Attachement(props, id)
+    return new Attachment(props, id)
   }
 
   get title() {
