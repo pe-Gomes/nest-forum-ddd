@@ -6,16 +6,24 @@ import { createQuestion } from '@tests/factory/question'
 import { NotAllowedError, ResourceNotFoundError } from '@/core/errors'
 import { InMemoryQuestionAttachmentRepository } from '@tests/in-memory-repository/question-attachment'
 import { createQuestionAttachment } from '@tests/factory/question-attachment'
+import { InMemoryStudentsRepository } from '@tests/in-memory-repository/student-repository'
+import { InMemoryAttachmentsRepository } from '@tests/in-memory-repository/attachment'
 
+let studentsRepo: InMemoryStudentsRepository
+let attachmentsRepo: InMemoryAttachmentsRepository
 let questionRepository: InMemoryQuestionsRepository
 let questionAttachmentRepository: InMemoryQuestionAttachmentRepository
 let sut: EditQuestionUseCase
 
 describe('EditQuestion Use Case', () => {
   beforeEach(() => {
+    studentsRepo = new InMemoryStudentsRepository()
+    attachmentsRepo = new InMemoryAttachmentsRepository()
     questionAttachmentRepository = new InMemoryQuestionAttachmentRepository()
     questionRepository = new InMemoryQuestionsRepository(
+      attachmentsRepo,
       questionAttachmentRepository,
+      studentsRepo,
     )
     sut = new EditQuestionUseCase(
       questionRepository,

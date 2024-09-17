@@ -7,15 +7,25 @@ import { EntityID } from '@/core/entities/value-objects/entity-id'
 import { NotAllowedError, ResourceNotFoundError } from '@/core/errors'
 import { InMemoryQuestionAttachmentRepository } from '@tests/in-memory-repository/question-attachment'
 import { createQuestionAttachment } from '@tests/factory/question-attachment'
+import { InMemoryAttachmentsRepository } from '@tests/in-memory-repository/attachment'
+import { InMemoryStudentsRepository } from '@tests/in-memory-repository/student-repository'
 
+let studentsRepository: InMemoryStudentsRepository
+let attachmentRepository: InMemoryAttachmentsRepository
 let questionRepository: QuestionsRepository
 let questionAttachments: InMemoryQuestionAttachmentRepository
 let sut: DeleteQuestionUseCase
 
 describe('DeleteQuestion Use Case', () => {
   beforeEach(() => {
+    attachmentRepository = new InMemoryAttachmentsRepository()
     questionAttachments = new InMemoryQuestionAttachmentRepository()
-    questionRepository = new InMemoryQuestionsRepository(questionAttachments)
+    studentsRepository = new InMemoryStudentsRepository()
+    questionRepository = new InMemoryQuestionsRepository(
+      attachmentRepository,
+      questionAttachments,
+      studentsRepository,
+    )
     sut = new DeleteQuestionUseCase(questionRepository, questionAttachments)
   })
 

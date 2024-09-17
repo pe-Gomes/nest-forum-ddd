@@ -6,7 +6,7 @@ import { ValueObject } from '@/core/entities/value-objects'
 export type QuestionDetailsProps = {
   questionId: EntityID
   authorId: EntityID
-  author: string
+  authorName: string
   title: string
   content: string
   slug: Slug
@@ -29,8 +29,8 @@ export class QuestionDetails extends ValueObject<QuestionDetailsProps> {
     return this.props.authorId
   }
 
-  get author() {
-    return this.props.author
+  get authorName() {
+    return this.props.authorName
   }
 
   get title() {

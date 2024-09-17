@@ -1,6 +1,5 @@
 import { InMemoryQuestionsRepository } from '@tests/in-memory-repository/questions'
 import { waitFor } from '@tests/utils/wait-for'
-import { describe, beforeEach, vi, it, expect } from 'vitest'
 import { SendNotificationUseCase } from '../use-cases/send-notification'
 import { OnAnswerCreated } from './on-answer-created'
 import { InMemoryNotificationRepository } from '@tests/in-memory-repository/notification-repository'
@@ -9,7 +8,11 @@ import { createAnswer } from '@tests/factory/answer'
 import { createQuestion } from '@tests/factory/question'
 import { InMemoryQuestionAttachmentRepository } from '@tests/in-memory-repository/question-attachment'
 import { InMemoryAnswerAttachmentRepository } from '@tests/in-memory-repository/answer-attachment'
+import { InMemoryAttachmentsRepository } from '@tests/in-memory-repository/attachment'
+import { InMemoryStudentsRepository } from '@tests/in-memory-repository/student-repository'
 
+let inMemoryAttachmentRepo: InMemoryAttachmentsRepository
+let inMemoryStudentRepo: InMemoryStudentsRepository
 let inMemoryAnswerAttachmentsRepo: InMemoryAnswerAttachmentRepository
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository
 let inMemoryQuestionAttachmentsRepo: InMemoryQuestionAttachmentRepository
@@ -21,9 +24,13 @@ let spySendNotification: unknown
 
 describe('On Answer Created', () => {
   beforeEach(() => {
+    inMemoryStudentRepo = new InMemoryStudentsRepository()
+    inMemoryAttachmentRepo = new InMemoryAttachmentsRepository()
     inMemoryQuestionAttachmentsRepo = new InMemoryQuestionAttachmentRepository()
     inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
+      inMemoryAttachmentRepo,
       inMemoryQuestionAttachmentsRepo,
+      inMemoryStudentRepo,
     )
     inMemoryAnswerAttachmentsRepo = new InMemoryAnswerAttachmentRepository()
     inMemoryAnswersRepository = new InMemoryAnswerRepository(

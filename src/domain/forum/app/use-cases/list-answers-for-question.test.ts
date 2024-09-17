@@ -9,7 +9,11 @@ import { createAnswer } from '@tests/factory/answer'
 import { createQuestion } from '@tests/factory/question'
 import { InMemoryQuestionAttachmentRepository } from '@tests/in-memory-repository/question-attachment'
 import { InMemoryAnswerAttachmentRepository } from '@tests/in-memory-repository/answer-attachment'
+import { InMemoryAttachmentsRepository } from '@tests/in-memory-repository/attachment'
+import { InMemoryStudentsRepository } from '@tests/in-memory-repository/student-repository'
 
+let studentsRepo: InMemoryStudentsRepository
+let attachmentsRepo: InMemoryAttachmentsRepository
 let answerAttachmentsRepo: InMemoryAnswerAttachmentRepository
 let questionAttachmentsRepo: InMemoryQuestionAttachmentRepository
 let answerRepository: InMemoryAnswerRepository
@@ -18,11 +22,15 @@ let questionsRepository: InMemoryQuestionsRepository
 
 describe('ListRecentAnswers', () => {
   beforeEach(() => {
+    studentsRepo = new InMemoryStudentsRepository()
+    attachmentsRepo = new InMemoryAttachmentsRepository()
     answerAttachmentsRepo = new InMemoryAnswerAttachmentRepository()
     questionAttachmentsRepo = new InMemoryQuestionAttachmentRepository()
     answerRepository = new InMemoryAnswerRepository(answerAttachmentsRepo)
     questionsRepository = new InMemoryQuestionsRepository(
+      attachmentsRepo,
       questionAttachmentsRepo,
+      studentsRepo,
     )
     sut = new ListAnswersForQuestionUseCase(answerRepository)
 

@@ -67,7 +67,7 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
     return QuestionDetails.create({
       questionId: question.id,
       authorId: question.authorId,
-      author: author.name,
+      authorName: author.name,
       title: question.title,
       slug: question.slug,
       content: question.content,

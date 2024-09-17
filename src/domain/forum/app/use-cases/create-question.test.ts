@@ -3,15 +3,25 @@ import { InMemoryQuestionsRepository } from '@tests/in-memory-repository/questio
 import { CreateQuestionUseCase } from './create-question'
 import { EntityID } from '@/core/entities/value-objects/entity-id'
 import { InMemoryQuestionAttachmentRepository } from '@tests/in-memory-repository/question-attachment'
+import { InMemoryAttachmentsRepository } from '@tests/in-memory-repository/attachment'
+import { InMemoryStudentsRepository } from '@tests/in-memory-repository/student-repository'
 
+let studentsRepo: InMemoryStudentsRepository
+let attachmentRepo: InMemoryAttachmentsRepository
 let questionRepository: InMemoryQuestionsRepository
 let questionAttachmentRepo: InMemoryQuestionAttachmentRepository
 let useCase: CreateQuestionUseCase
 
 describe('Create Question Use Case', () => {
   beforeEach(() => {
+    attachmentRepo = new InMemoryAttachmentsRepository()
     questionAttachmentRepo = new InMemoryQuestionAttachmentRepository()
-    questionRepository = new InMemoryQuestionsRepository(questionAttachmentRepo)
+    studentsRepo = new InMemoryStudentsRepository()
+    questionRepository = new InMemoryQuestionsRepository(
+      attachmentRepo,
+      questionAttachmentRepo,
+      studentsRepo,
+    )
     useCase = new CreateQuestionUseCase(questionRepository)
   })
 
