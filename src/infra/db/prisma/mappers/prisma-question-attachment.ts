@@ -1,6 +1,6 @@
 import { EntityID } from '@/core/entities/value-objects/entity-id'
 import { QuestionAttachment } from '@/domain/forum/enterprise/entities/question-attachment'
-import { type Attachment } from '@prisma/client'
+import { type Prisma, type Attachment } from '@prisma/client'
 
 export class PrismaQuestionAttachmentMapper {
   static toEntity(attach: Attachment): QuestionAttachment {
@@ -15,5 +15,22 @@ export class PrismaQuestionAttachmentMapper {
       },
       new EntityID(attach.id),
     )
+  }
+
+  static toPersistenceUpdateMany(
+    attachs: QuestionAttachment[],
+  ): Prisma.AttachmentUpdateManyArgs {
+    const attachmentsIds = attachs.map((attachment) => attachment.id.toString())
+
+    return {
+      where: {
+        id: {
+          in: attachmentsIds,
+        },
+      },
+      data: {
+        questionId: attachs[0].questionId.toString(),
+      },
+    }
   }
 }
