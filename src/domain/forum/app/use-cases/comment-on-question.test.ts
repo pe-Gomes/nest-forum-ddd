@@ -4,7 +4,9 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { CommentOnQuestionUseCase } from './comment-on-question'
 import { createQuestion } from '@tests/factory/question'
 import { InMemoryQuestionAttachmentRepository } from '@tests/in-memory-repository/question-attachment'
+import { InMemoryStudentsRepository } from '@tests/in-memory-repository/student-repository'
 
+let studentsRepo: InMemoryStudentsRepository
 let questionCommentRepository: InMemoryQuestionCommentRepository
 let questionAttachmentRepo: InMemoryQuestionAttachmentRepository
 let questionRespository: InMemoryQuestionsRepository
@@ -12,8 +14,11 @@ let sut: CommentOnQuestionUseCase
 
 describe('CommentOnQuestion Use Case', () => {
   beforeEach(() => {
+    studentsRepo = new InMemoryStudentsRepository()
     questionAttachmentRepo = new InMemoryQuestionAttachmentRepository()
-    questionCommentRepository = new InMemoryQuestionCommentRepository()
+    questionCommentRepository = new InMemoryQuestionCommentRepository(
+      studentsRepo,
+    )
     questionRespository = new InMemoryQuestionsRepository(
       questionAttachmentRepo,
     )

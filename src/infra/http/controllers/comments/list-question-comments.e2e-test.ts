@@ -57,8 +57,8 @@ describe('List Comments to Question (e2e)', async () => {
     expect(res.status).toBe(200)
     expect(res.body).toEqual({
       comments: [
-        expect.objectContaining({ content: 'Test 2' }),
-        expect.objectContaining({ content: 'Test 1' }),
+        expect.objectContaining({ content: 'Test 2', authorName: user.name }),
+        expect.objectContaining({ content: 'Test 1', authorName: user.name }),
       ],
     })
   })
