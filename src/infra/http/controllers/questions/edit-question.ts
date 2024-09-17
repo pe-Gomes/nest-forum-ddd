@@ -17,7 +17,7 @@ import { NotAllowedError, ResourceNotFoundError } from '@/core/errors'
 const editQuestionBodySchema = z.object({
   title: z.string().min(1),
   content: z.string().min(1),
-  attachmentsIds: z.array(z.string()).optional(),
+  attachmentsIds: z.array(z.string().uuid()).optional(),
 })
 
 type EditQuestionBody = z.infer<typeof editQuestionBodySchema>
