@@ -7,8 +7,8 @@ import {
   Query,
 } from '@nestjs/common'
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe'
-import { AnswerCommentPresenter } from '../../presenters/answer-comment-presenter'
 import { z } from 'zod'
+import { CommentWithAuthorPresenter } from '../../presenters/comment-with-author-presenter'
 
 const paginationQuerySchema = z.object({
   page: z.coerce.number().min(1).default(1),
@@ -40,8 +40,10 @@ export class ListAnswerCommentsController {
       throw new BadRequestException()
     }
 
-    const comments = res.value.comments
+    const { comments } = res.value
 
-    return { comments: comments.map((c) => AnswerCommentPresenter.toHTTP(c)) }
+    return {
+      comments: comments.map((c) => CommentWithAuthorPresenter.toHTTP(c)),
+    }
   }
 }

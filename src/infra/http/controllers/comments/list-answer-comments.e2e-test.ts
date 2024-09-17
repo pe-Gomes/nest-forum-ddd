@@ -14,7 +14,7 @@ describe('List Comments to Answer (e2e)', async () => {
   let studentFactory: StudentFactory
   let questionsFactory: QuestionFactory
   let answersFactory: AnswerFactory
-  let messageFactory: AnswerCommentFactory
+  let answerCommentRepo: AnswerCommentFactory
   let jwt: JwtService
 
   beforeAll(async () => {
@@ -32,7 +32,7 @@ describe('List Comments to Answer (e2e)', async () => {
     studentFactory = moduleRef.get(StudentFactory)
     questionsFactory = moduleRef.get(QuestionFactory)
     answersFactory = moduleRef.get(AnswerFactory)
-    messageFactory = moduleRef.get(AnswerCommentFactory)
+    answerCommentRepo = moduleRef.get(AnswerCommentFactory)
     jwt = moduleRef.get(JwtService)
 
     await app.init()
@@ -50,12 +50,12 @@ describe('List Comments to Answer (e2e)', async () => {
       questionId: question.id,
     })
 
-    await messageFactory.makePrismaComment({
+    await answerCommentRepo.makePrismaComment({
       authorId: user.id,
       answerId: answer.id,
       content: 'Test 1',
     })
-    await messageFactory.makePrismaComment({
+    await answerCommentRepo.makePrismaComment({
       authorId: user.id,
       answerId: answer.id,
       content: 'Test 2',
@@ -70,8 +70,8 @@ describe('List Comments to Answer (e2e)', async () => {
     expect(res.status).toBe(200)
     expect(res.body).toEqual({
       comments: [
-        expect.objectContaining({ content: 'Test 2' }),
-        expect.objectContaining({ content: 'Test 1' }),
+        expect.objectContaining({ content: 'Test 2', authorName: user.name }),
+        expect.objectContaining({ content: 'Test 1', authorName: user.name }),
       ],
     })
   })
