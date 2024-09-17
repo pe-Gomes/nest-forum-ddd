@@ -63,7 +63,7 @@ export class EditQuestionUseCase {
           attachmentId: new EntityID(id),
         }),
       )
-      console.log(questionAttachments)
+
       questionAttachmentList.update(questionAttachments)
     }
 
