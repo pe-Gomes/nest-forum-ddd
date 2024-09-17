@@ -1,7 +1,7 @@
 import { Either, success } from '@/core/either'
-import { QuestionComment } from '../../enterprise/entities/question-comment'
 import { QuestionCommentsRepository } from '../repositories/question-comments-repository'
 import { Injectable } from '@nestjs/common'
+import { CommentWithAuthor } from '../../enterprise/entities/value-objects/comment-with-author'
 
 type ListQuestionCommentsRequest = {
   questionId: string
@@ -12,7 +12,7 @@ type ListQuestionCommentsRequest = {
 type ListQuestionCommentsResponse = Either<
   null,
   {
-    comments: QuestionComment[]
+    comments: CommentWithAuthor[]
   }
 >
 
@@ -24,10 +24,11 @@ export class ListQuestionCommentsUseCase {
     page,
     limit,
   }: ListQuestionCommentsRequest): Promise<ListQuestionCommentsResponse> {
-    const comments = await this.questionRepository.getManyByQuestionId(
-      questionId,
-      { page, limit },
-    )
+    const comments =
+      await this.questionRepository.getManyByQuestionIdWithAuthor(questionId, {
+        page,
+        limit,
+      })
 
     return success({ comments })
   }
