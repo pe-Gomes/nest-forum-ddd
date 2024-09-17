@@ -4,6 +4,7 @@ import { PrismaService } from '@/infra/db/prisma/prisma.service'
 import { JwtService } from '@nestjs/jwt/dist'
 import { type NestExpressApplication } from '@nestjs/platform-express'
 import { Test } from '@nestjs/testing'
+import { AttachmentFactory } from '@tests/factory/attachment'
 import { QuestionFactory } from '@tests/factory/question'
 import { StudentFactory } from '@tests/factory/student'
 import request from 'supertest'
@@ -12,19 +13,21 @@ describe('Answer Question (e2e)', async () => {
   let app: NestExpressApplication
   let studentFactory: StudentFactory
   let questionsFactory: QuestionFactory
+  let attachmentFactory: AttachmentFactory
   let db: PrismaService
   let jwt: JwtService
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [StudentFactory, QuestionFactory],
+      providers: [StudentFactory, QuestionFactory, AttachmentFactory],
     }).compile()
 
     app = moduleRef.createNestApplication()
     db = moduleRef.get(PrismaService)
     studentFactory = moduleRef.get(StudentFactory)
     questionsFactory = moduleRef.get(QuestionFactory)
+    attachmentFactory = moduleRef.get(AttachmentFactory)
     jwt = moduleRef.get(JwtService)
 
     await app.init()
@@ -37,6 +40,9 @@ describe('Answer Question (e2e)', async () => {
       authorId: user.id,
     })
 
+    const attachment1 = await attachmentFactory.makePrismaAttachment()
+    const attachment2 = await attachmentFactory.makePrismaAttachment()
+
     const token = jwt.sign({ sub: user.id.toString() })
 
     const res = await request(app.getHttpServer())
@@ -44,9 +50,8 @@ describe('Answer Question (e2e)', async () => {
       .set('Authorization', `Bearer ${token}`)
       .send({
         content: 'Random answer',
+        attachmentsIds: [attachment1.id.toString(), attachment2.id.toString()],
       })
-
-    console.log(res.body)
 
     expect(res.status).toBe(201)
 
@@ -55,5 +60,11 @@ describe('Answer Question (e2e)', async () => {
     })
 
     expect(answer).toBeTruthy()
+
+    const attachmentsOnDb = await db.attachment.findMany({
+      where: { answerId: answer?.id.toString() },
+    })
+
+    expect(attachmentsOnDb).toHaveLength(2)
   })
 })
