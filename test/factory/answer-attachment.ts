@@ -21,7 +21,7 @@ export function createAnswerAttachment(
 }
 
 @Injectable()
-export class AsnwerAttachmentFactory {
+export class AnswerAttachmentFactory {
   constructor(private prisma: PrismaService) {}
 
   async makeAnswerAttachment(

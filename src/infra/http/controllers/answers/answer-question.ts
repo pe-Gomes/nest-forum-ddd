@@ -13,7 +13,7 @@ import { z } from 'zod'
 
 const answerQuestionBodySchema = z.object({
   content: z.string().min(1),
-  attachmentsIds: z.array(z.string()).optional(),
+  attachmentsIds: z.array(z.string().uuid()).optional(),
 })
 
 type AnswerQuestionBody = z.infer<typeof answerQuestionBodySchema>
