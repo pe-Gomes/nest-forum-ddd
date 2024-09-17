@@ -30,7 +30,9 @@ export class PrismaQuestionAttachmentsRepository
   }
 
   async deleteMany(attachments: QuestionAttachment[]): Promise<void> {
-    const attachmentsIds = attachments.map((att) => att.id.toString())
+    if (attachments.length === 0) return
+
+    const attachmentsIds = attachments.map((att) => att.attachmentId.toString())
 
     await this.db.attachment.deleteMany({
       where: { id: { in: attachmentsIds } },
