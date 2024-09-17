@@ -8,7 +8,7 @@ export class EntityID {
   }
 
   public equals(id: EntityID) {
-    return id.value === this.value
+    return id.toValue() === this.value
   }
 
   toString() {
