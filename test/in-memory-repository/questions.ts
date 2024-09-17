@@ -1,11 +1,16 @@
 import { type Question } from '@/domain/forum/enterprise/entities/question'
 import { type QuestionsRepository } from '@/domain/forum/app/repositories/questions-repository'
+import { type QuestionAttachmentsRepository } from '@/domain/forum/app/repositories/question-attachments-repository'
 
 export class InMemoryQuestionsRepository implements QuestionsRepository {
   public questions: Question[] = []
 
+  constructor(private questionAttachments: QuestionAttachmentsRepository) {}
+
   async create(question: Question) {
-    await Promise.resolve(this.questions.push(question))
+    this.questions.push(question)
+
+    await this.questionAttachments.createMany(question.attachments.getItems())
   }
 
   async getBySlug(slug: string) {
@@ -34,12 +39,18 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
     )
 
     this.questions[questionIdx] = question
+
+    await this.questionAttachments.createMany(question.attachments.getItems())
+    await this.questionAttachments.deleteMany(
+      question.attachments.getRemovedItems(),
+    )
   }
 
   async delete(id: string) {
     const questionIdx = this.questions.findIndex(
       (question) => question.id.toString() === id,
     )
-    await Promise.resolve(this.questions.splice(questionIdx, 1))
+
+    this.questions.splice(questionIdx, 1)
   }
 }
