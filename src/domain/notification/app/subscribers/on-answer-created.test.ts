@@ -7,8 +7,10 @@ import { InMemoryNotificationRepository } from '@tests/in-memory-repository/noti
 import { InMemoryAnswerRepository } from '@tests/in-memory-repository/answer'
 import { createAnswer } from '@tests/factory/answer'
 import { createQuestion } from '@tests/factory/question'
+import { InMemoryQuestionAttachmentRepository } from '@tests/in-memory-repository/question-attachment'
 
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository
+let inMemoryQuestionAttachmentsRepo: InMemoryQuestionAttachmentRepository
 let inMemoryAnswersRepository: InMemoryAnswerRepository
 let inMemoryNotificationsRepository: InMemoryNotificationRepository
 let sendNotificationUseCase: SendNotificationUseCase
@@ -17,7 +19,10 @@ let spySendNotification: unknown
 
 describe('On Answer Created', () => {
   beforeEach(() => {
-    inMemoryQuestionsRepository = new InMemoryQuestionsRepository()
+    inMemoryQuestionAttachmentsRepo = new InMemoryQuestionAttachmentRepository()
+    inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
+      inMemoryQuestionAttachmentsRepo,
+    )
     inMemoryAnswersRepository = new InMemoryAnswerRepository()
     inMemoryNotificationsRepository = new InMemoryNotificationRepository()
     sendNotificationUseCase = new SendNotificationUseCase(

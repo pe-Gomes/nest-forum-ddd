@@ -14,8 +14,8 @@ let sut: DeleteQuestionUseCase
 
 describe('DeleteQuestion Use Case', () => {
   beforeEach(() => {
-    questionRepository = new InMemoryQuestionsRepository()
     questionAttachments = new InMemoryQuestionAttachmentRepository()
+    questionRepository = new InMemoryQuestionsRepository(questionAttachments)
     sut = new DeleteQuestionUseCase(questionRepository, questionAttachments)
   })
 

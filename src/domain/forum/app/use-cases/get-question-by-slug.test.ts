@@ -3,19 +3,22 @@ import { InMemoryQuestionsRepository } from '@tests/in-memory-repository/questio
 import { GetQuestionBySlugUseCase } from './get-question-by-slug'
 import { createQuestion } from '@tests/factory/question'
 import { ResourceNotFoundError } from '@/core/errors'
+import { InMemoryQuestionAttachmentRepository } from '@tests/in-memory-repository/question-attachment'
 
-let repository: InMemoryQuestionsRepository
+let questionRepo: InMemoryQuestionsRepository
+let questionAttachments: InMemoryQuestionAttachmentRepository
 let sut: GetQuestionBySlugUseCase
 
 describe('Get Question by Slug Use Case', () => {
   beforeEach(() => {
-    repository = new InMemoryQuestionsRepository()
-    sut = new GetQuestionBySlugUseCase(repository)
+    questionAttachments = new InMemoryQuestionAttachmentRepository()
+    questionRepo = new InMemoryQuestionsRepository(questionAttachments)
+    sut = new GetQuestionBySlugUseCase(questionRepo)
   })
 
   it('it should get question by a slug if exists', async () => {
     const question = createQuestion()
-    await repository.create(question)
+    await questionRepo.create(question)
 
     const res = await sut.execute({ slug: question.slug.value })
 

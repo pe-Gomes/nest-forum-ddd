@@ -7,15 +7,20 @@ import { EntityID } from '@/core/entities/value-objects/entity-id'
 
 import { createAnswer } from '@tests/factory/answer'
 import { createQuestion } from '@tests/factory/question'
+import { InMemoryQuestionAttachmentRepository } from '@tests/in-memory-repository/question-attachment'
 
+let questionAttachmentsRepo: InMemoryQuestionAttachmentRepository
 let answerRepository: InMemoryAnswerRepository
 let sut: ListAnswersForQuestionUseCase
 let questionsRepository: InMemoryQuestionsRepository
 
 describe('ListRecentAnswers', () => {
   beforeEach(() => {
+    questionAttachmentsRepo = new InMemoryQuestionAttachmentRepository()
     answerRepository = new InMemoryAnswerRepository()
-    questionsRepository = new InMemoryQuestionsRepository()
+    questionsRepository = new InMemoryQuestionsRepository(
+      questionAttachmentsRepo,
+    )
     sut = new ListAnswersForQuestionUseCase(answerRepository)
 
     vi.useFakeTimers()

@@ -3,13 +3,18 @@ import { expect, it, describe, beforeEach, vi, afterEach } from 'vitest'
 import { InMemoryQuestionsRepository } from '@tests/in-memory-repository/questions'
 import { ListRecentQuestionsUseCase } from './list-recent-questions'
 import { createQuestion } from '@tests/factory/question'
+import { InMemoryQuestionAttachmentRepository } from '@tests/in-memory-repository/question-attachment'
 
 let questionRepository: InMemoryQuestionsRepository
+let questionAttachmentsRepo: InMemoryQuestionAttachmentRepository
 let sut: ListRecentQuestionsUseCase
 
 describe('ListRecentQuestions', () => {
   beforeEach(() => {
-    questionRepository = new InMemoryQuestionsRepository()
+    questionAttachmentsRepo = new InMemoryQuestionAttachmentRepository()
+    questionRepository = new InMemoryQuestionsRepository(
+      questionAttachmentsRepo,
+    )
     sut = new ListRecentQuestionsUseCase(questionRepository)
 
     vi.useFakeTimers()
