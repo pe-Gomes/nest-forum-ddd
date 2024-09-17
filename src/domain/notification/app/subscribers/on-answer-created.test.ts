@@ -8,7 +8,9 @@ import { InMemoryAnswerRepository } from '@tests/in-memory-repository/answer'
 import { createAnswer } from '@tests/factory/answer'
 import { createQuestion } from '@tests/factory/question'
 import { InMemoryQuestionAttachmentRepository } from '@tests/in-memory-repository/question-attachment'
+import { InMemoryAnswerAttachmentRepository } from '@tests/in-memory-repository/answer-attachment'
 
+let inMemoryAnswerAttachmentsRepo: InMemoryAnswerAttachmentRepository
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository
 let inMemoryQuestionAttachmentsRepo: InMemoryQuestionAttachmentRepository
 let inMemoryAnswersRepository: InMemoryAnswerRepository
@@ -23,7 +25,10 @@ describe('On Answer Created', () => {
     inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
       inMemoryQuestionAttachmentsRepo,
     )
-    inMemoryAnswersRepository = new InMemoryAnswerRepository()
+    inMemoryAnswerAttachmentsRepo = new InMemoryAnswerAttachmentRepository()
+    inMemoryAnswersRepository = new InMemoryAnswerRepository(
+      inMemoryAnswerAttachmentsRepo,
+    )
     inMemoryNotificationsRepository = new InMemoryNotificationRepository()
     sendNotificationUseCase = new SendNotificationUseCase(
       inMemoryNotificationsRepository,

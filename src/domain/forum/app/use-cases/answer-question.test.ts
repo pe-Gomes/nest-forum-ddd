@@ -2,14 +2,17 @@ import { expect, it, describe, beforeEach } from 'vitest'
 import { InMemoryAnswerRepository } from '@tests/in-memory-repository/answer'
 import { AnswerQuestionUseCase } from './answer-question'
 import { EntityID } from '@/core/entities/value-objects/entity-id'
+import { InMemoryAnswerAttachmentRepository } from '@tests/in-memory-repository/answer-attachment'
 
-let repository: InMemoryAnswerRepository
+let answerAttachRepo: InMemoryAnswerAttachmentRepository
+let answerRepo: InMemoryAnswerRepository
 let useCase: AnswerQuestionUseCase
 
 describe('Answer Question Use Case', () => {
   beforeEach(() => {
-    repository = new InMemoryAnswerRepository()
-    useCase = new AnswerQuestionUseCase(repository)
+    answerAttachRepo = new InMemoryAnswerAttachmentRepository()
+    answerRepo = new InMemoryAnswerRepository(answerAttachRepo)
+    useCase = new AnswerQuestionUseCase(answerRepo)
   })
 
   it('should create a answer', async () => {
@@ -31,6 +34,6 @@ describe('Answer Question Use Case', () => {
       expect.objectContaining({ attachmentId: new EntityID('2') }),
     ])
 
-    expect(repository.answers[0].id).toBe(res.value?.answer.id)
+    expect(answerRepo.answers[0].id).toBe(res.value?.answer.id)
   })
 })

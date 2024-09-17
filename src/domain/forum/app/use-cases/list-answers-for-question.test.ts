@@ -8,7 +8,9 @@ import { EntityID } from '@/core/entities/value-objects/entity-id'
 import { createAnswer } from '@tests/factory/answer'
 import { createQuestion } from '@tests/factory/question'
 import { InMemoryQuestionAttachmentRepository } from '@tests/in-memory-repository/question-attachment'
+import { InMemoryAnswerAttachmentRepository } from '@tests/in-memory-repository/answer-attachment'
 
+let answerAttachmentsRepo: InMemoryAnswerAttachmentRepository
 let questionAttachmentsRepo: InMemoryQuestionAttachmentRepository
 let answerRepository: InMemoryAnswerRepository
 let sut: ListAnswersForQuestionUseCase
@@ -16,8 +18,9 @@ let questionsRepository: InMemoryQuestionsRepository
 
 describe('ListRecentAnswers', () => {
   beforeEach(() => {
+    answerAttachmentsRepo = new InMemoryAnswerAttachmentRepository()
     questionAttachmentsRepo = new InMemoryQuestionAttachmentRepository()
-    answerRepository = new InMemoryAnswerRepository()
+    answerRepository = new InMemoryAnswerRepository(answerAttachmentsRepo)
     questionsRepository = new InMemoryQuestionsRepository(
       questionAttachmentsRepo,
     )

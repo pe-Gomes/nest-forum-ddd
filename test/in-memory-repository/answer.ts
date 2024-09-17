@@ -1,12 +1,17 @@
 import { type Answer } from '@/domain/forum/enterprise/entities/answer'
 import { type AnswersRepository } from '@/domain/forum/app/repositories/answers-repository'
 import { DomainEvents } from '@/core/events/domain-events'
+import { type AnswerAttachmentsRepository } from '@/domain/forum/app/repositories/answer-attachments-repository'
 
 export class InMemoryAnswerRepository implements AnswersRepository {
   public answers: Answer[] = []
 
+  constructor(private answerAttachmentsRepo: AnswerAttachmentsRepository) {}
+
   async create(answer: Answer) {
-    await Promise.resolve(this.answers.push(answer))
+    this.answers.push(answer)
+
+    await this.answerAttachmentsRepo.createMany(answer.attachments.getItems())
 
     DomainEvents.dispatchEventsForAggregate(answer.id)
   }
@@ -39,7 +44,14 @@ export class InMemoryAnswerRepository implements AnswersRepository {
       (item) => item.id.toString() === answer.id.toString(),
     )
 
-    await Promise.resolve((this.answers[answerIdx] = answer))
+    this.answers[answerIdx] = answer
+
+    await this.answerAttachmentsRepo.createMany(
+      answer.attachments.getNewItems(),
+    )
+    await this.answerAttachmentsRepo.deleteMany(
+      answer.attachments.getRemovedItems(),
+    )
 
     DomainEvents.dispatchEventsForAggregate(answer.id)
   }

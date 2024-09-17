@@ -7,13 +7,15 @@ import { NotAllowedError, ResourceNotFoundError } from '@/core/errors'
 import { InMemoryAnswerAttachmentRepository } from '@tests/in-memory-repository/answer-attachment'
 import { createAnswerAttachment } from '@tests/factory/answer-attachment'
 
+let answerAttachRepo: InMemoryAnswerAttachmentRepository
 let answerRepository: InMemoryAnswerRepository
 let answerAttachmentRepo: InMemoryAnswerAttachmentRepository
 let sut: EditAnswerUseCase
 
 describe('EditAnswer Use Case', () => {
   beforeEach(() => {
-    answerRepository = new InMemoryAnswerRepository()
+    answerAttachRepo = new InMemoryAnswerAttachmentRepository()
+    answerRepository = new InMemoryAnswerRepository(answerAttachRepo)
     answerAttachmentRepo = new InMemoryAnswerAttachmentRepository()
     sut = new EditAnswerUseCase(answerRepository, answerAttachmentRepo)
   })

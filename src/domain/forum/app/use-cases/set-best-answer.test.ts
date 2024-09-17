@@ -7,7 +7,9 @@ import { createAnswer } from '@tests/factory/answer'
 import { EntityID } from '@/core/entities/value-objects/entity-id'
 import { NotAllowedError, ResourceNotFoundError } from '@/core/errors'
 import { InMemoryQuestionAttachmentRepository } from '@tests/in-memory-repository/question-attachment'
+import { InMemoryAnswerAttachmentRepository } from '@tests/in-memory-repository/answer-attachment'
 
+let answerAttachmentsRepo: InMemoryAnswerAttachmentRepository
 let questionRepository: InMemoryQuestionsRepository
 let questionAttachmentRepo: InMemoryQuestionAttachmentRepository
 let answerRepository: InMemoryAnswerRepository
@@ -17,7 +19,8 @@ describe('Set Best Answer Use Case', () => {
   beforeEach(() => {
     questionAttachmentRepo = new InMemoryQuestionAttachmentRepository()
     questionRepository = new InMemoryQuestionsRepository(questionAttachmentRepo)
-    answerRepository = new InMemoryAnswerRepository()
+    answerAttachmentsRepo = new InMemoryAnswerAttachmentRepository()
+    answerRepository = new InMemoryAnswerRepository(answerAttachmentsRepo)
     sut = new SetBestAnswerUseCase(questionRepository, answerRepository)
   })
 
