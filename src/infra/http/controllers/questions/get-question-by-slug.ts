@@ -6,7 +6,7 @@ import {
   HttpCode,
   Param,
 } from '@nestjs/common'
-import { QuestionPresenter } from '../../presenters/question-presenter'
+import { QuestionDetailsPresenter } from '../../presenters/question-details-presenter'
 
 @Controller('/questions/:slug')
 export class GetQuestionBySlugController {
@@ -21,6 +21,8 @@ export class GetQuestionBySlugController {
       throw new BadRequestException(res.value.message)
     }
 
-    return { question: QuestionPresenter.toHTTP(res.value.question, true) }
+    const { question } = res.value
+
+    return { question: QuestionDetailsPresenter.toHTTP(question) }
   }
 }
