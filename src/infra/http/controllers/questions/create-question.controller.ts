@@ -14,6 +14,7 @@ import { z } from 'zod'
 const createQuestionSchema = z.object({
   title: z.string().min(1),
   content: z.string().min(1),
+  attachmentsIds: z.array(z.string().uuid()).optional(),
 })
 
 type CreateQuestionSchema = z.infer<typeof createQuestionSchema>
@@ -29,12 +30,13 @@ export class CreateQuestionController {
     @CurrentUser() user: TokenPayload,
     @Body(bodyValidationPipe) body: CreateQuestionSchema,
   ) {
-    const { title, content } = body
+    const { title, content, attachmentsIds } = body
 
     const res = await this.createQuestion.execute({
       title,
       content,
       authorId: user.sub,
+      attachmentsIds,
     })
 
     if (res.isFailure()) {

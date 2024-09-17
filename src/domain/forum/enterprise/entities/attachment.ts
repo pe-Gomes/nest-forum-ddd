@@ -1,7 +1,7 @@
 import { type EntityID } from '@/core/entities/value-objects/entity-id'
 import { Entity } from '@/core/entities/entity'
 
-interface AttachmentProps {
+export interface AttachmentProps {
   title: string
   link: string
 }
