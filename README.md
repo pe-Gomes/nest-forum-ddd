@@ -17,3 +17,9 @@ pnpm start:dev
 - TypeScript
 - PostgresSQL (Prisma)
 - Redis (ioredis)
+- Cloudflare R2 (AWS S3 SDK compatible)
+
+## TODO:
+
+- [ ] Add Prisma transactions support for complex operations.
+- [ ] Handle deletions of attachments on storage infra.
