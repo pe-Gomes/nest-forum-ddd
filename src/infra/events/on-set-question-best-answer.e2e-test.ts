@@ -1,3 +1,4 @@
+import { DomainEvents } from '@/core/events/domain-events'
 import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/db/database.module'
 import { PrismaService } from '@/infra/db/prisma/prisma.service'
@@ -30,6 +31,8 @@ describe('On Set Best Answer to Question Event (e2e)', async () => {
     questionsFactory = moduleRef.get(QuestionFactory)
     answerFactory = moduleRef.get(AnswerFactory)
     jwt = moduleRef.get(JwtService)
+
+    DomainEvents.shouldRun = true
 
     await app.init()
   })

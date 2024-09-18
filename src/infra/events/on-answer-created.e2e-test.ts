@@ -1,3 +1,4 @@
+import { DomainEvents } from '@/core/events/domain-events'
 import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/db/database.module'
 import { PrismaService } from '@/infra/db/prisma/prisma.service'
@@ -28,6 +29,8 @@ describe('On Answer Created Event (e2e)', async () => {
     studentFactory = moduleRef.get(StudentFactory)
     questionsFactory = moduleRef.get(QuestionFactory)
     jwt = moduleRef.get(JwtService)
+
+    DomainEvents.shouldRun = true
 
     await app.init()
   })

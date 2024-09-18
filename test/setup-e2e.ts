@@ -1,3 +1,4 @@
+import { DomainEvents } from '@/core/events/domain-events'
 import { PrismaClient } from '@prisma/client'
 import { execSync } from 'node:child_process'
 import { randomUUID } from 'node:crypto'
@@ -14,6 +15,8 @@ beforeAll(async () => {
   process.env.DATABASE_URL = dbURL
 
   execSync('pnpm prisma migrate deploy')
+
+  DomainEvents.shouldRun = false
 })
 
 afterAll(async () => {
