@@ -6,7 +6,10 @@ import { Injectable } from '@nestjs/common'
 import { PrismaQuestionMapper } from '../mappers/prisma-question-mapper'
 import { PrismaService } from '../prisma.service'
 import { QuestionDetails } from '@/domain/forum/enterprise/entities/value-objects/question-details'
-import { PrismaQuestionDetailsMapper } from '../mappers/prisma-question-details-mapper'
+import {
+  PrismaQuestionDetails,
+  PrismaQuestionDetailsMapper,
+} from '../mappers/prisma-question-details-mapper'
 import { DomainEvents } from '@/core/events/domain-events'
 import { CacheRepository } from '@/infra/cache/cache-repository'
 
@@ -54,7 +57,9 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
     const cached = await this.cacheRepository.get(`question:${slug}:details`)
 
     if (cached) {
-      return JSON.parse(cached) as QuestionDetails
+      const prismaQuestion = JSON.parse(cached) as PrismaQuestionDetails
+
+      return PrismaQuestionDetailsMapper.toEntity(prismaQuestion)
     }
 
     const question = await this.db.question.findUnique({
@@ -64,14 +69,12 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
 
     if (!question) return null
 
-    const questionDetails = PrismaQuestionDetailsMapper.toEntity(question)
-
     await this.cacheRepository.set(
       `question:${slug}:details`,
-      JSON.stringify(questionDetails),
+      JSON.stringify(question),
     )
 
-    return questionDetails
+    return PrismaQuestionDetailsMapper.toEntity(question)
   }
 
   async getMany({ page, limit }: PaginationParams) {
