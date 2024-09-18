@@ -4,6 +4,7 @@ import { type InMemoryStudentsRepository } from './student-repository'
 import { QuestionDetails } from '@/domain/forum/enterprise/entities/value-objects/question-details'
 import { type InMemoryQuestionAttachmentRepository } from './question-attachment'
 import { type InMemoryAttachmentsRepository } from './attachment'
+import { DomainEvents } from '@/core/events/domain-events'
 
 export class InMemoryQuestionsRepository implements QuestionsRepository {
   public questions: Question[] = []
@@ -18,6 +19,8 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
     this.questions.push(question)
 
     await this.questionAttachments.createMany(question.attachments.getItems())
+
+    DomainEvents.dispatchEventsForAggregate(question.id)
   }
 
   async getBySlug(slug: string) {
@@ -103,6 +106,8 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
     await this.questionAttachments.deleteMany(
       question.attachments.getRemovedItems(),
     )
+
+    DomainEvents.dispatchEventsForAggregate(question.id)
   }
 
   async delete(id: string) {

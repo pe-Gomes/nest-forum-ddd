@@ -6,6 +6,7 @@ import { Slug } from './value-objects/slug'
 import { AggregateRoot } from '@/core/entities/aggregate-root'
 
 import dayjs from 'dayjs'
+import { SetQuestionBestAnswerEvent } from '../events/set-question-best-answer-event'
 
 export type QuestionProps = {
   title: string
@@ -78,8 +79,17 @@ export class Question extends AggregateRoot<QuestionProps> {
     return this.props.bestAnswerId
   }
 
-  set bestAnswerId(id: EntityID | undefined) {
-    this.props.bestAnswerId = id
+  set bestAnswerId(bestAnswerId: EntityID | undefined) {
+    if (bestAnswerId === undefined) return
+
+    if (
+      this.props.bestAnswerId === undefined ||
+      !bestAnswerId.equals(this.props.bestAnswerId)
+    ) {
+      this.addDomainEvent(new SetQuestionBestAnswerEvent(this, bestAnswerId))
+    }
+
+    this.props.bestAnswerId = bestAnswerId
     this.touch()
   }
 
