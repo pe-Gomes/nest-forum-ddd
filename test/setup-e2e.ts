@@ -1,11 +1,19 @@
 import { DomainEvents } from '@/core/events/domain-events'
+import { envSchema } from '@/infra/env'
 import { PrismaClient } from '@prisma/client'
+import Redis from 'ioredis'
 import { execSync } from 'node:child_process'
 import { randomUUID } from 'node:crypto'
 
-const DATABASE_URL = process.env.DATABASE_URL
+const env = envSchema.parse(process.env)
 
 const db = new PrismaClient()
+const redis = new Redis({
+  host: env.REDIS_HOST,
+  port: env.REDIS_PORT,
+  password: env.REDIS_PASSWORD,
+  db: env.REDIS_DB,
+})
 
 const schemaId = randomUUID()
 
@@ -17,6 +25,7 @@ beforeAll(async () => {
   execSync('pnpm prisma migrate deploy')
 
   DomainEvents.shouldRun = false
+  await redis.flushdb()
 })
 
 afterAll(async () => {
@@ -25,12 +34,12 @@ afterAll(async () => {
 })
 
 function generateUniqueDatabaseURL(schemaId: string) {
-  if (!DATABASE_URL) {
+  if (!env.DATABASE_URL) {
     console.error('Failed to load environment variables')
     process.exit(1)
   }
 
-  const url = new URL(DATABASE_URL)
+  const url = new URL(env.DATABASE_URL)
 
   url.searchParams.set('schema', schemaId)
 

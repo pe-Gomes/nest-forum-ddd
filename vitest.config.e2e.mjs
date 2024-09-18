@@ -9,7 +9,7 @@ export default defineConfig({
     globals: true,
     root: './',
     setupFiles: ['./test/setup-e2e.ts'],
-    env: loadEnvFile(),
+    env: loadEnvFile('.env.test.local'),
   },
   plugins: [
     swc.vite({

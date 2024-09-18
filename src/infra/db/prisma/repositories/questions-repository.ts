@@ -8,12 +8,14 @@ import { PrismaService } from '../prisma.service'
 import { QuestionDetails } from '@/domain/forum/enterprise/entities/value-objects/question-details'
 import { PrismaQuestionDetailsMapper } from '../mappers/prisma-question-details-mapper'
 import { DomainEvents } from '@/core/events/domain-events'
+import { CacheRepository } from '@/infra/cache/cache-repository'
 
 //TODO: Convert multiple promisses to transactions
 @Injectable()
 export class PrismaQuestionsRepository implements QuestionsRepository {
   constructor(
     private readonly db: PrismaService,
+    private cacheRepository: CacheRepository,
     private questionAttachmentsRepo: QuestionAttachmentsRepository,
   ) {}
 
@@ -49,6 +51,12 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
   }
 
   async getBySlugWithDetails(slug: string): Promise<QuestionDetails | null> {
+    const cached = await this.cacheRepository.get(`question:${slug}:details`)
+
+    if (cached) {
+      return JSON.parse(cached) as QuestionDetails
+    }
+
     const question = await this.db.question.findUnique({
       where: { slug },
       include: { author: true, attachments: true },
@@ -56,7 +64,14 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
 
     if (!question) return null
 
-    return PrismaQuestionDetailsMapper.toEntity(question)
+    const questionDetails = PrismaQuestionDetailsMapper.toEntity(question)
+
+    await this.cacheRepository.set(
+      `question:${slug}:details`,
+      JSON.stringify(questionDetails),
+    )
+
+    return questionDetails
   }
 
   async getMany({ page, limit }: PaginationParams) {
@@ -83,6 +98,7 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
     await this.questionAttachmentsRepo.deleteMany(
       question.attachments.getRemovedItems(),
     )
+    await this.cacheRepository.delete(`question:${question.slug.value}:details`)
 
     DomainEvents.dispatchEventsForAggregate(question.id)
   }
