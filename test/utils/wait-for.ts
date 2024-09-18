@@ -5,7 +5,7 @@
  * If the maximum duration is reached, it then rejects.
  *
  * @param expectations A function containing all tests assertions
- * @param maxDuration Maximum wait time before rejecting
+ * @param maxDuration Maximum wait time before rejecting (ms).
  */
 export async function waitFor(
   assertions: () => void,

@@ -7,7 +7,9 @@ import { PrismaQuestionMapper } from '../mappers/prisma-question-mapper'
 import { PrismaService } from '../prisma.service'
 import { QuestionDetails } from '@/domain/forum/enterprise/entities/value-objects/question-details'
 import { PrismaQuestionDetailsMapper } from '../mappers/prisma-question-details-mapper'
+import { DomainEvents } from '@/core/events/domain-events'
 
+//TODO: Convert multiple promisses to transactions
 @Injectable()
 export class PrismaQuestionsRepository implements QuestionsRepository {
   constructor(
@@ -22,6 +24,8 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
     await this.questionAttachmentsRepo.createMany(
       question.attachments.getItems(),
     )
+
+    DomainEvents.dispatchEventsForAggregate(question.id)
   }
 
   async getBySlug(slug: string) {
@@ -79,6 +83,8 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
     await this.questionAttachmentsRepo.deleteMany(
       question.attachments.getRemovedItems(),
     )
+
+    DomainEvents.dispatchEventsForAggregate(question.id)
   }
 
   async delete(id: string) {
