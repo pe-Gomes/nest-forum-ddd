@@ -1,8 +1,9 @@
-import { type Notification } from '../../enterprise/entities/notification'
-import { type Either, failure, success } from '@/core/either'
-import { type NotificationsRepository } from '../repositories/notifications-repository'
+import { Notification } from '../../enterprise/entities/notification'
+import { Either, failure, success } from '@/core/either'
+import { NotificationsRepository } from '../repositories/notifications-repository'
 
 import { NotAllowedError, ResourceNotFoundError } from '@/core/errors'
+import { Injectable } from '@nestjs/common'
 
 type ReadNotificationRequest = {
   notificationId: string
@@ -14,6 +15,7 @@ type ReadNotificationResponse = Either<
   { notification: Notification }
 >
 
+@Injectable()
 export class ReadNotificationUseCase {
   constructor(private notificationRepository: NotificationsRepository) {}
 
