@@ -12,6 +12,7 @@ type DomainEventCallback = (e: any) => void | Promise<void>
 export class DomainEvents {
   private static handlersMap: Record<string, DomainEventCallback[]> = {}
   private static markedAggregates: AggregateRoot<any>[] = []
+  public static shouldRun = true
 
   public static markAggregateForDispatch(aggregate: AggregateRoot<any>) {
     const aggregateFound = !!this.findMarkedAggregateByID(aggregate.id)
@@ -70,7 +71,9 @@ export class DomainEvents {
     this.markedAggregates = []
   }
 
-  private static async dispatch(event: DomainEvent) {
+  private static dispatch(event: DomainEvent) {
+    if (!this.shouldRun) return
+
     const eventClassName: string = event.constructor.name
 
     const isEventRegistered = eventClassName in this.handlersMap
@@ -79,7 +82,7 @@ export class DomainEvents {
       const handlers = this.handlersMap[eventClassName]
 
       for (const handler of handlers) {
-        await handler(event)
+        void handler(event)
       }
     }
   }
